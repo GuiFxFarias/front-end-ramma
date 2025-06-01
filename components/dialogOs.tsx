@@ -20,7 +20,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getClientes } from '@/app/(app)/servicos/api/clientes';
 import {
   Form,
@@ -31,6 +31,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { postNovaOS } from '@/app/(app)/manutencao/api/postNovaOs';
+import toast from 'react-hot-toast';
 
 const tiposServico = ['Fornecimento', 'Manutenção', 'Pintura', 'Outros'];
 
@@ -48,6 +49,15 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export function DialogNovaOS() {
+  const queryClient = useQueryClient();
+
+  const mutateOs = useMutation({
+    mutationFn: (body: FormSchema) => postNovaOS(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['vendas']);
+    },
+  });
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,11 +71,20 @@ export function DialogNovaOS() {
   const { data: dataCliente = [] } = useQuery(['clientes'], getClientes);
 
   const onSubmit = async (data: FormSchema) => {
-    const response = await postNovaOS({
+    const response = {
       data_abertura: data.data_abertura,
       tipo_servico: data.tipo_servico,
       cliente_id: data.cliente_id,
       anexo_doc: data.anexo_doc,
+    };
+
+    mutateOs.mutate(response, {
+      onSuccess: () => {
+        toast.success('Serviço emitido com sucesso!');
+      },
+      onError: () => {
+        toast.error('Erro ao emitir o serviço.');
+      },
     });
 
     console.log('Resposta da API:', response);

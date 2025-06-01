@@ -1,5 +1,6 @@
 'use client';
 
+import { Toaster } from 'react-hot-toast';
 import './globals.css';
 import Query from './layoutClient';
 import { Button } from '@/components/ui/button';

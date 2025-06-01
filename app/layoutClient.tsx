@@ -1,10 +1,14 @@
-"use client";
+'use client';
 
-import { QueryClient, QueryClientProvider } from "react-query";
+import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
 export default function Query({ children }: { children: React.ReactNode }) {
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <Toaster />
+      {children}
+    </QueryClientProvider>
   );
 }
