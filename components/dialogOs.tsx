@@ -32,11 +32,13 @@ import {
 } from '@/components/ui/form';
 import { postNovaOS } from '@/app/(app)/manutencao/api/postNovaOs';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const tiposServico = ['Fornecimento', 'Manutenção', 'Pintura', 'Outros'];
 
 // 🧩 Schema
 const formSchema = z.object({
+  id: z.string().optional(),
   data_abertura: z.string().min(1, 'Data obrigatória'),
   tipo_servico: z.string().min(1, 'Tipo obrigatório'),
   cliente_id: z.string().min(1, 'Cliente obrigatório'),
@@ -50,6 +52,7 @@ type FormSchema = z.infer<typeof formSchema>;
 
 export function DialogNovaOS() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const mutateOs = useMutation({
     mutationFn: (body: FormSchema) => postNovaOS(body),
@@ -80,6 +83,7 @@ export function DialogNovaOS() {
 
     mutateOs.mutate(response, {
       onSuccess: () => {
+        router.push(`/manutencao/${data.id}/itensOs`);
         toast.success('Serviço emitido com sucesso!');
       },
       onError: () => {
