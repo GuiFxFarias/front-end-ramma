@@ -1,21 +1,21 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { useQuery } from 'react-query';
-import { IEquipamento } from '@/lib/interface/Iequipamento';
-import { IService } from '@/lib/interface/IService';
-import { DialogVerProposta } from '@/app/(app)/servicos/dialogVerProposta';
-import { useMemo } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { NewServiceDialog } from '../servicos/newServiceDialog';
-import { NewSalePecasDialog } from '../servicos/newSaleDialog';
-import PecasVenda from '../servicos/salvePecaAvulsa';
+// import { useState } from 'react';
+// import { Input } from '@/components/ui/input';
+// import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+// import { useQuery } from 'react-query';
+// import { IEquipamento } from '@/lib/interface/Iequipamento';
+// import { IService } from '@/lib/interface/IService';
+// import { DialogVerProposta } from '@/app/(app)/servicos/dialogVerProposta';
+// import { useMemo } from 'react';
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import { NewServiceDialog } from '../servicos/newServiceDialog';
+// import { NewSalePecasDialog } from '../servicos/newSaleDialog';
+// import PecasVenda from '../servicos/salvePecaAvulsa';
 import { DialogNovaOS } from '@/components/dialogOs';
 
 export default function ManutencaoItens() {
-  const [search, setSearch] = useState<string>('');
+  // const [search, setSearch] = useState<string>('');
 
   //   const { data: services = [], isLoading } = useQuery(
   //     ['services'],

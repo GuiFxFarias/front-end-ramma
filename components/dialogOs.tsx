@@ -42,9 +42,7 @@ const formSchema = z.object({
   data_abertura: z.string().min(1, 'Data obrigatória'),
   tipo_servico: z.string().min(1, 'Tipo obrigatório'),
   cliente_id: z.string().min(1, 'Cliente obrigatório'),
-  anexo_doc: z.any().refine((files) => files && files.length > 0, {
-    message: 'Selecione pelo menos um arquivo',
-  }),
+  anexo_doc: z.instanceof(FileList).optional(),
 });
 
 // 🧾 Tipagem
@@ -74,24 +72,28 @@ export function DialogNovaOS() {
   const { data: dataCliente = [] } = useQuery(['clientes'], getClientes);
 
   const onSubmit = async (data: FormSchema) => {
-    const response = {
+    const payload = {
       data_abertura: data.data_abertura,
       tipo_servico: data.tipo_servico,
       cliente_id: data.cliente_id,
       anexo_doc: data.anexo_doc,
     };
 
-    mutateOs.mutate(response, {
-      onSuccess: () => {
-        router.push(`/manutencao/${data.id}/itensOs`);
+    mutateOs.mutate(payload, {
+      onSuccess: (res: { sucesso: boolean; id: string }) => {
+        const idCriado = res?.id;
+        if (!idCriado) {
+          toast.error('ID não retornado pela API');
+          return;
+        }
+
         toast.success('Serviço emitido com sucesso!');
+        router.push(`/manutencao/${idCriado}/itensOs`);
       },
       onError: () => {
         toast.error('Erro ao emitir o serviço.');
       },
     });
-
-    console.log('Resposta da API:', response);
   };
 
   return (
