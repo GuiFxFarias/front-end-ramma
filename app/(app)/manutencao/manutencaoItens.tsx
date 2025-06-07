@@ -13,6 +13,18 @@
 // import { NewSalePecasDialog } from '../servicos/newSaleDialog';
 // import PecasVenda from '../servicos/salvePecaAvulsa';
 import { DialogNovaOS } from '@/components/dialogOs';
+import { useQuery } from 'react-query';
+import { getServicos } from './api/getServicoManutencao';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { ItensDaOS } from './itensOS';
 
 export default function ManutencaoItens() {
   // const [search, setSearch] = useState<string>('');
@@ -45,16 +57,65 @@ export default function ManutencaoItens() {
   //     );
   //   }, [filterCodService, search]);
 
+  const { data: servicos = [], isLoading } = useQuery(
+    ['servicosManutencao'],
+    getServicos
+  );
+
   return (
     <div className='flex-1 p-4 sm:p-8'>
-      {/* Header com Título e Botões */}
+      {/* Header */}
       <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
         <h1 className='text-2xl sm:text-3xl font-bold text-gray-800'>
-          Lista de Propostas
+          Lista de Serviços
         </h1>
         <div className='flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto'>
           <DialogNovaOS />
         </div>
+      </div>
+
+      {/* Lista com scroll */}
+      <div className='h-[500px] overflow-y-auto space-y-4 pr-2'>
+        {isLoading ? (
+          <p>Carregando serviços...</p>
+        ) : (
+          servicos.map((servico) => (
+            <Card key={servico.id} className='border border-gray-200 shadow-sm'>
+              <CardContent className='p-4 space-y-2 space-x-2'>
+                <div className='text-sm font-semibold text-gray-800'>
+                  #{servico.id} – {servico.tipo_servico}
+                </div>
+                <div className='text-sm text-gray-500'>
+                  Abertura:{' '}
+                  {new Date(servico.data_abertura).toLocaleDateString('pt-BR')}
+                </div>
+                <Badge variant='outline' className='text-xs'>
+                  {servico.status_atual}
+                </Badge>
+
+                {/* Dialog para ver itens */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Badge
+                      variant='outline'
+                      className='text-xs cursor-pointer hover:bg-zinc-200'
+                    >
+                      Ver Itens
+                    </Badge>
+                  </DialogTrigger>
+                  <DialogContent className='w-[60vw]'>
+                    <DialogHeader>
+                      <DialogTitle>Itens da OS #{servico.id}</DialogTitle>
+                    </DialogHeader>
+                    <div className='mt-2'>
+                      <ItensDaOS servicoId={servico.id} />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );

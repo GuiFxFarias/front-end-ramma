@@ -42,7 +42,7 @@ const formSchema = z.object({
   data_abertura: z.string().min(1, 'Data obrigatória'),
   tipo_servico: z.string().min(1, 'Tipo obrigatório'),
   cliente_id: z.string().min(1, 'Cliente obrigatório'),
-  anexo_doc: z.instanceof(FileList).optional(),
+  anexo_doc: z.any().optional(),
 });
 
 // 🧾 Tipagem
