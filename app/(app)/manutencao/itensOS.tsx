@@ -42,7 +42,9 @@ export function ItensDaOS({ servicoId }: { servicoId: number }) {
 
           {/* Botão de ação */}
           <div className='text-right'>
-            <Link href={`/manutencao/item/${item.id}/pecas`}>
+            <Link
+              href={`/manutencao/item/${item.id}/pecas/${item.equipamento_id}`}
+            >
               <Button size='sm' className='mt-2'>
                 Selecionar Peças
               </Button>
